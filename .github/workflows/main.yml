@@ -3,11 +3,9 @@ name: app-build
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
-    branches: [master]
-
-  workflow_dispatch:
+    branches: [main]
 
 jobs:
   build:
@@ -40,10 +38,10 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
       - name: Login to AWS ECR
         uses: aws-actions/amazon-ecr-login@v1
-        with:
-          registry: ${{ env.DOCKER_REGISTRY }}
-          username: ${{ env.DOCKER_USER }}
-          password: ${{ env.DOCKER_TOKEN }}
+        # with:
+        #   registry: ${{ env.DOCKER_REGISTRY }}
+        #   username: ${{ env.DOCKER_USER }}
+        #   password: ${{ env.DOCKER_TOKEN }}
       - name: Additional output
         run: |
           echo service ${{ steps.repo.outputs._1 }}
