@@ -35,5 +35,5 @@ jobs:
           SERVICE: ${{ steps.service.outputs._1 }}
           TAG: $(cat app/VERSION)
         run: |
-          docker build -t ${ECR_REGISTRY}/${nv.ECR_REPOSITORY}:${env.TAG} -f ${SERVICE}/Dockerfile ${SERVICE}
-          docker push ${ECR_REGISTRY}/${nv.ECR_REPOSITORY}:${env.TAG}
+          docker build -t ${ECR_REGISTRY}/${SERVICE}:${TAG} -f ${SERVICE}/Dockerfile ${SERVICE}
+          docker push ${ECR_REGISTRY}/${SERVICE}:${TAG}
