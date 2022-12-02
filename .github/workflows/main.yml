@@ -20,7 +20,7 @@ jobs:
         id: version
         uses: juliangruber/read-file-action@v1
         with:
-          path: ${SERVICE}/VERSION
+          path: ${{ env.SERVICE }}/VERSION
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
