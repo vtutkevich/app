@@ -10,7 +10,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    # env:
+    env:
+      tag: $(cat app/VERSION)
     #   DOCKER_REGISTRY: "ghcr.io"
     #   DOCKER_USER: ${{ secrets.DOCKER_USER }}
     #   DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
@@ -44,7 +45,7 @@ jobs:
         #   password: ${{ env.DOCKER_TOKEN }}
       - name: Additional output
         run: |
-          echo service ${{ steps.repo.outputs._1 }}
+          echo service ${{ steps.repo.outputs._1 }}:${env.tag}
       # - name: Check branch 2
       #   if: github.ref_name == 'master'
       #   run: echo Branch ${{ github.ref_name }}
