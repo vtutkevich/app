@@ -35,5 +35,5 @@ jobs:
           ECR_REGISTRY: ${{ steps.ecr-login.outputs.registry }}
           TAG: ${{ steps.version.outputs.content }}
         run: |
-          docker build -t ${ECR_REGISTRY}/${SERVICE}:${TAG} -f ${SERVICE}/Dockerfile ${SERVICE}
-          docker push ${ECR_REGISTRY}/${SERVICE}:${TAG}
+          echo docker build -t ${ECR_REGISTRY}/${{ env.SERVICE }}:${TAG} -f ${{ env.SERVICE }}/Dockerfile ${{ env.SERVICE }}
+          echo docker push ${ECR_REGISTRY}/${{ env.SERVICE }}:${TAG}
