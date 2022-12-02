@@ -7,6 +7,9 @@ on:
   pull_request:
     branches: [main]
 
+env:
+  TAG: $(cat app/VERSION)
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -33,7 +36,7 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.ecr-login.outputs.registry }}
           SERVICE: ${{ steps.service.outputs._1 }}
-          TAG: $(cat app/VERSION)
+          VERSION: ${{ env.TAG }}
         run: |
-          echo docker build -t ${ECR_REGISTRY}/${SERVICE}:${TAG} -f ${SERVICE}/Dockerfile ${SERVICE}
-          echo docker push ${ECR_REGISTRY}/${SERVICE}:${TAG}
+          echo docker build -t ${ECR_REGISTRY}/${SERVICE}:${VERSION} -f ${SERVICE}/Dockerfile ${SERVICE}
+          echo docker push ${ECR_REGISTRY}/${SERVICE}:${VERSION}
