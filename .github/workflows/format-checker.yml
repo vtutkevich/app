@@ -10,9 +10,7 @@ jobs:
     steps:
       - uses: deepakputhraya/action-branch-name@master
         with:
-          # regex: '^(/(APP)\-[0-9]+[\-_]|(hotfix|release)\/[0-9]+[0-9\.]*[0-9]+|main).*'
-          regex: '^((APP)\-[0-9]+[\-_]).*'
-          allowed_prefixes: "feature,hotfix,release"
+          regex: '^(feature\/(DBD)\-[0-9]+[\-_]|(hotfix|release)\/[0-9]+[0-9\.]*[0-9]+|main).*'
           ignore: main
       - uses: deepakputhraya/action-pr-title@master
         with:
