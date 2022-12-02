@@ -10,8 +10,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      TAG: $(cat app/VERSION)
+    # env:
+    #   TAG: $(cat app/VERSION)
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -31,20 +32,16 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
       - name: Login to AWS ECR
+        id: ecr-login
         uses: aws-actions/amazon-ecr-login@v1
-        # with:
-        #   registry: ${{ env.DOCKER_REGISTRY }}
-        #   username: ${{ env.DOCKER_USER }}
-        #   password: ${{ env.DOCKER_TOKEN }}
-      - name: Additional output
-        run: |
-          echo service ${{ steps.service.outputs._1 }}:${{ env.TAG }}
-      # - name: Check branch 2
-      #   if: github.ref_name == 'master'
-      #   run: echo Branch ${{ github.ref_name }}
-      # - name: Build and push
-      #   uses: docker/build-push-action@v3
-      #   with:
-      #     context: .
-      #     tags: ${{ env.DOCKER_REGISTRY }}/jsapp:${{ steps.tag.outputs.lowercase }}
-      #     push: true
+      - name: Build and push image
+        env:
+          ECR_REGISTRY: ${{ steps.ecr-login.outputs.registry }}
+          ECR_REPOSITORY: ${{ steps.service.outputs._1 }}
+          TAG: $(cat app/VERSION)
+        uses: docker/build-push-action@v3
+        with:
+          context: app/
+          # tags: ${{ env.DOCKER_REGISTRY }}/jsapp:${{ steps.tag.outputs.lowercase }}
+          tags: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.TAG }}
+          push: true
