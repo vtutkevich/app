@@ -7,19 +7,20 @@ on:
   pull_request:
     branches: [main]
 
+env:
+  SERVICE: app
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Get service name
-        uses: xom9ikk/split@v1
-        id: service
+      - name: Get service version
+        id: version
+        uses: juliangruber/read-file-action@v1
         with:
-          string: ${{ github.repository }}
-          separator: /
-          limit: -1
+          path: ${{ env.SERVICE }}
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -32,8 +33,7 @@ jobs:
       - name: Build and push image
         env:
           ECR_REGISTRY: ${{ steps.ecr-login.outputs.registry }}
-          SERVICE: ${{ steps.service.outputs._1 }}
-          TAG: "1.0.0"
+          TAG: ${{ steps.version.outputs.content }}
         run: |
           docker build -t ${ECR_REGISTRY}/${SERVICE}:${TAG} -f ${SERVICE}/Dockerfile ${SERVICE}
           echo docker push ${ECR_REGISTRY}/${SERVICE}:${TAG}
