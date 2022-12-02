@@ -10,9 +10,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    # env:
-    #   TAG: $(cat app/VERSION)
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -23,8 +20,6 @@ jobs:
           string: ${{ github.repository }}
           separator: /
           limit: -1
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -37,11 +32,8 @@ jobs:
       - name: Build and push image
         env:
           ECR_REGISTRY: ${{ steps.ecr-login.outputs.registry }}
-          ECR_REPOSITORY: ${{ steps.service.outputs._1 }}
+          SERVICE: ${{ steps.service.outputs._1 }}
           TAG: $(cat app/VERSION)
-        uses: docker/build-push-action@v3
-        with:
-          context: app/
-          # tags: ${{ env.DOCKER_REGISTRY }}/jsapp:${{ steps.tag.outputs.lowercase }}
-          tags: ${ECR_REGISTRY}/${nv.ECR_REPOSITORY}:${env.TAG}
-          push: true
+        run: |
+          docker build -t ${ECR_REGISTRY}/${nv.ECR_REPOSITORY}:${env.TAG} -f ${SERVICE}/Dockerfile ${SERVICE}
+          docker push ${ECR_REGISTRY}/${nv.ECR_REPOSITORY}:${env.TAG}
