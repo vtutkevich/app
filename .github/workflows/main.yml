@@ -39,6 +39,7 @@ jobs:
           ECR_REGISTRY: ${{ steps.ecr-login.outputs.registry }}
           ECR_REPOSITORY: ${{ steps.service.outputs._1 }}
           TAG: $(cat app/VERSION)
+        uses: docker/build-push-action@v3
         with:
           context: app/
           # tags: ${{ env.DOCKER_REGISTRY }}/jsapp:${{ steps.tag.outputs.lowercase }}
