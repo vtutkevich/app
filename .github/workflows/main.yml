@@ -20,7 +20,7 @@ jobs:
         id: version
         uses: juliangruber/read-file-action@v1
         with:
-          path: ${{ env.SERVICE }}/VERSION
+          path: ${SERVICE}/VERSION
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -32,8 +32,8 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
       - name: Build and push image
         env:
-          ECR_REGISTRY: ${{ steps.ecr-login.outputs.registry }}
+          ECR: ${{ steps.ecr-login.outputs.registry }}
           TAG: ${{ steps.version.outputs.content }}
         run: |
-          echo docker build -t ${ECR_REGISTRY}/${{ env.SERVICE }}:${TAG} -f ${{ env.SERVICE }}/Dockerfile ${{ env.SERVICE }}
-          echo docker push ${ECR_REGISTRY}/${{ env.SERVICE }}:${TAG}
+          docker build -t ${ECR}/${SERVICE}:${TAG} -f ${SERVICE}/Dockerfile ${SERVICE}
+          docker push ${ECR}/${SERVICE}:${TAG}
