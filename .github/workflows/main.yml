@@ -36,4 +36,4 @@ jobs:
           TAG: ${{ steps.version.outputs.content }}
         run: |
           docker build -t ${ECR_REGISTRY}/${SERVICE}:${TAG} -f ${SERVICE}/Dockerfile ${SERVICE}
-          echo docker push ${ECR_REGISTRY}/${SERVICE}:${TAG}
+          docker push ${ECR_REGISTRY}/${SERVICE}:${TAG}
